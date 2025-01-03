@@ -43,7 +43,7 @@ jobs:
       - name: Upload Build to S3
         run: |
           cd application  
-          zip -r build.zip appspec.yml build/ scripts/    
+          zip -r build.zip appspec.yml dist/ scripts/    
           aws s3 cp build.zip s3://${{ secrets.S3_BUCKET }}/builds/build-$GITHUB_SHA.zip
 
   deploy:
