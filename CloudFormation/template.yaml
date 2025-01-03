@@ -194,7 +194,6 @@ Resources:
           MaxSessionDuration: 3600
           Description: "Github Actions role"
           Policies:
-          
           - PolicyName: 'CodeDeployRoleforGitHub-policy'
             PolicyDocument:
               Version: '2012-10-17'
@@ -292,17 +291,16 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: Allow
+              - Effect: Allow
                 Action:
                   - ec2:RunInstances
                   - ec2:CreateTags
                   - iam:PassRole
-                      - 'autoscaling:Describe*'
-                    - 'autoscaling:UpdateAutoScalingGroup'
-                    - 'autoscaling:AttachInstances'
-                    - 'autoscaling:DetachInstances'
-                    - 'autoscaling:TerminateInstanceInAutoScalingGroup'
+                  - 'autoscaling:Describe*'
+                  - 'autoscaling:UpdateAutoScalingGroup'
+                  - 'autoscaling:AttachInstances'
+                  - 'autoscaling:DetachInstances'
+                  - 'autoscaling:TerminateInstanceInAutoScalingGroup'
                 Resource:
                   - !Sub 'arn:${AWS::Partition}:codedeploy:*:${AWS::AccountId}:*'
 
