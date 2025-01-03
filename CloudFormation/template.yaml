@@ -229,7 +229,6 @@ Resources:
           Events:
             - DEPLOYMENT_FAILURE
             - DEPLOYMENT_STOP_ON_REQUEST
-
       AutoScalingGroups:
       - Ref: AutoScalingGroup
   ALBSecurityGroup:
@@ -299,6 +298,11 @@ Resources:
                   - ec2:RunInstances
                   - ec2:CreateTags
                   - iam:PassRole
+                      - 'autoscaling:Describe*'
+                    - 'autoscaling:UpdateAutoScalingGroup'
+                    - 'autoscaling:AttachInstances'
+                    - 'autoscaling:DetachInstances'
+                    - 'autoscaling:TerminateInstanceInAutoScalingGroup'
                 Resource:
                   - !Sub 'arn:${AWS::Partition}:codedeploy:*:${AWS::AccountId}:*'
 
@@ -334,13 +338,16 @@ Resources:
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      HealthCheckType: ELB
+      HealthCheckType: EC2
       HealthCheckGracePeriod: 300
       DesiredCapacity: !Ref AutoScalingGroupDesiredCapacity
       MinSize: !Ref AutoScalingGroupMinSize
       MaxSize: !Ref AutoScalingGroupMaxSize
       LaunchConfigurationName:
         Ref: WebappLaunchConfig
+      VPCZoneIdentifier:  
+      - !Ref PublicSubnet1
+      - !Ref PublicSubnet2
       TargetGroupARNs:
         - Ref: ALBTargetGroup
       Tags:
