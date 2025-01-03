@@ -17,10 +17,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      - name: Get Commit Hash (GITHUB_SHA)
+        id: commit_hash
+        run: |
+          echo "COMMIT_HASH=$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: |
@@ -42,14 +42,9 @@ jobs:
 
       - name: Upload Build to S3
         run: |
-          COMMIT_HASH=$(git rev-parse --short HEAD)
           cd application  
           zip -r build.zip appspec.yml build/ scripts/    
-          aws s3 cp build.zip s3://${{ secrets.S3_BUCKET }}/builds/build-$COMMIT_HASH.zip
-      
-      - name: Debug S3 Key
-        run: | 
-          echo "S3 Key: builds/build-$COMMIT_HASH.zip"
+          aws s3 cp build.zip s3://${{ secrets.S3_BUCKET }}/builds/build-$GITHUB_SHA.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,8 +60,8 @@ jobs:
 
       - name: Deploy to CodeDeploy
         run: |
-          echo "S3 Key: builds/build-$COMMIT_HASH.zip"  
+          echo "Using Commit Hash: $GITHUB_SHA"  
           aws deploy create-deployment \
             --application-name CodeDeployAppNameWithASG \
             --deployment-group-name CodeDeployGroupName \
-            --s3-location bucket=${{ secrets.S3_BUCKET }},key=builds/build-$COMMIT_HASH.zip,bundleType=zip
+            --s3-location bucket=${{ secrets.S3_BUCKET }},key=builds/build-$GITHUB_SHA.zip,bundleType=zip
