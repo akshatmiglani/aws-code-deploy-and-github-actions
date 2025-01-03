@@ -159,16 +159,19 @@ Resources:
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore'
       Policies:
-        -
-          PolicyName: "allow-webapp-deployment-bucket-policy"
+        - PolicyName: "allow-webapp-deployment-bucket-policy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action: 
                 - "s3:getObject"
-                Resource: !Sub arn:${AWS::Partition}:s3:::${WebappDeploymentBucket}/*
+                Resource: !Sub arn:${AWS::Partition}:s3:::${WebappDeploymentBucket}/builds/*
+              
+              - Effect: "Allow"
+                Action: 
+                - "s3:ListBucket"
+                Resource: !Sub arn:${AWS::Partition}:s3:::${WebappDeploymentBucket}
   IDCProvider:
       Type: AWS::IAM::OIDCProvider
       Properties:

@@ -38,6 +38,7 @@ jobs:
           role-to-assume: ${{ secrets.IAMROLE_GITHUB }}
           role-session-name: GitHub-Action-Role
           aws-region: ap-south-1
+          audience: sts.amazonaws.com
 
       - name: Upload Build to S3
         run: |
@@ -45,6 +46,10 @@ jobs:
           cd application  
           zip -r build.zip appspec.yml build/ scripts/    
           aws s3 cp build.zip s3://${{ secrets.S3_BUCKET }}/builds/build-$COMMIT_HASH.zip
+      
+      - name: Debug S3 Key
+        run: | 
+          echo "S3 Key: builds/build-$COMMIT_HASH.zip"
 
   deploy:
     runs-on: ubuntu-latest
@@ -56,9 +61,11 @@ jobs:
           role-to-assume: ${{ secrets.IAMROLE_GITHUB }}
           role-session-name: GitHub-Action-Role
           aws-region: ap-south-1
+          audience: sts.amazonaws.com
 
       - name: Deploy to CodeDeploy
         run: |
+          echo "S3 Key: builds/build-$COMMIT_HASH.zip"  
           aws deploy create-deployment \
             --application-name CodeDeployAppNameWithASG \
             --deployment-group-name CodeDeployGroupName \
