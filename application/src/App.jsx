@@ -35,7 +35,7 @@ const App = () => {
 
   return (
     <>
-      <h1>Task Manager</h1>
+      <h1>Task Manager-1</h1>
       <div>
         <form onSubmit={handleAddTask}>
           <input type='text' name='task' placeholder='Enter a task...' />
