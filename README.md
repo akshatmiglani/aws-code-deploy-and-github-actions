@@ -1,5 +1,9 @@
 # Automated Deployment Pipeline with GitHub Actions and AWS CodeDeploy
 
+
+## Explanation Video
+[![Video Explanation](https://img.youtube.com/vi/Uub92fXjYWQ/0.jpg)](https://www.youtube.com/watch?v=Uub92fXjYWQ)
+
 ## Introduction
 This project sets up an automated deployment pipeline that integrates GitHub Actions and AWS CodeDeploy. The goal is to automate the deployment of a React application to AWS infrastructure, enabling a seamless continuous delivery pipeline. The application is automatically deployed to AWS resources, ensuring secure, scalable, and efficient delivery to production.
 
